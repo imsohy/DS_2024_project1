@@ -6,14 +6,15 @@
 #include <fstream>
 #include <sstream>							//to read command by stringstream
 #include <string>							//to use string
-using namespace std;
 
 class Manager
 {
 private:
-
-	ifstream fcmd;
-	ofstream flog;
+	SubtitleQueue* SQptr = nullptr;		//pointer to point SubtitleQueue instance
+	SubtitleBST* SBSTptr = nullptr;		//pointer to point SubtitleBST instance
+	SectionList* SLptr = nullptr;		//pointer to point SectionList instance
+	std::ifstream fcmd;
+	std::ofstream flog;
 public:
 	Manager();
 	~Manager();

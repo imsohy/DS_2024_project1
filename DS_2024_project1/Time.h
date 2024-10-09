@@ -32,4 +32,5 @@ public:
     //print Time with "HH:MM:SS" format
     friend std::ostream& operator<<(std::ostream& os, const Time& time);
 };
+
 #endif TIME_H

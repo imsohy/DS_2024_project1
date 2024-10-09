@@ -1,13 +1,18 @@
 #include "Manager.h"
-#include "Time.h"
+using namespace std;
 
 Manager::Manager()
 {
-    
+    SQptr = new SubtitleQueue;
+    SBSTptr = new SubtitleBST;
+    SLptr = new SectionList;
 }
-Manager::~Manager()
+Manager::~Manager()     //EXIT
 {
-
+    delete SQptr;
+    delete SBSTptr;
+    delete SLptr;
+    PrintSuccess("EXIT");
 }
 
 void Manager::Run(const char* command)
@@ -15,7 +20,7 @@ void Manager::Run(const char* command)
     // Open command & log file
     fcmd.open(command);                                     // file open in read state
     flog.open("log.txt");                                   // file open in write state. print all log here
-    if (!fcmd)                                              // defensive proramming
+    if (!fcmd)                                              // if faild to open
     {
         flog << "Fail to open command file" << endl;
         exit(-1);
@@ -48,7 +53,7 @@ void Manager::Run(const char* command)
                 if (!(iss>>extra))
                     Load();                                  //run LOAD
                 else
-                    PrintErrorCode(1000);                    //Error 1000; extra arguments left in line
+                    PrintErrorCode(100);                    //Error 100; extra arguments left in line
             }
             //QPOP
             else if (command_name == "QPOP")
@@ -57,7 +62,7 @@ void Manager::Run(const char* command)
                 if (!(iss>>extra))
                     Qpop();                        //run QPOP
                 else
-                    PrintErrorCode(1000);          //Error 1000; extra argumets left in line
+                    PrintErrorCode(200);          //Error 200; extra argumets left in line
             }
             //PRINT
             else if (command_name == "PRINT")
@@ -73,18 +78,18 @@ void Manager::Run(const char* command)
                         section_num = stoi(extra);           //exception std::invalid_argument, std::out of range
                         //check if section number is invalid
                         if (section_num < 0)
-                            PrintErrorCode(1000);            //Error 1000; invalid section number
+                            PrintErrorCode(300);            //Error 300; invalid section number
                         //check if there's no extra arguments
                         else if (!(iss >> extra))
                             Print(section_num);            //run PRINT section_num
                         else
-                            PrintErrorCode(1000);           //Error 1000; extra arguments left in line
+                            PrintErrorCode(300);           //Error 300; extra arguments left in line
                     }
                     catch (const invalid_argument& e) {
-                        PrintErrorCode(1000);               //Error 1000; argument not a number
+                        PrintErrorCode(300);               //Error 300; argument not a number
                     }
                     catch (const out_of_range& e) {
-                        PrintErrorCode(1000);               //Error 1000; argument not a number
+                        PrintErrorCode(300);               //Error 300; argument not a number
                     }
                 }
             }
@@ -93,21 +98,21 @@ void Manager::Run(const char* command)
             {
                 //get the arguments / check if its valid
                 if (!(iss >> section_num >> start_time >> end_time)) {
-                    PrintErrorCode(1000);                   //Error 1000; invalid argument
+                    PrintErrorCode(400);                   //Error 400; invalid or insufficient argument
                     iss.clear();                        //clear stream failbit
                 }
                 //check if there's no extra arguments
                 else if (!(iss>>extra))
                     Section(section_num, start_time, end_time);
                 else
-                    PrintErrorCode(1000);                   //Error 1000; extra arguments left in line
+                    PrintErrorCode(400);                   //Error 400; extra arguments left in line
             }
             //DELETE
             else if (command_name == "DELETE")
             {
                 //get the argumets / check if its valid
                 if (!(iss >> delete_mode >> key_time)) {
-                    PrintErrorCode(1000);                   //Error 1000; invalid argument
+                    PrintErrorCode(500);                   //Error 500; invalid or insufficient argument
                     iss.clear();
                 }
                 //check if there's no extra arguments
@@ -121,10 +126,10 @@ void Manager::Run(const char* command)
                         DeleteUnder(key_time);
                     }
                     else
-                        PrintErrorCode(1000); //Error 1000; extra arguments left in line
+                        PrintErrorCode(500); //Error 500; extra arguments left in line
                 }
                 else
-                    PrintErrorCode(1000); //Error 1000; extra arguments left in line
+                    PrintErrorCode(500); //Error 500; extra arguments left in line
             }
             //EXIT
             else if (command_name == "EXIT")
@@ -132,10 +137,10 @@ void Manager::Run(const char* command)
                 //check if there's no extra arguments
                 if (!(iss>>extra))
                 {
-                    PrintSuccess("EXIT");
+                    break;
                 }
                 else
-                    PrintErrorCode(1000);           //Error 1000; extra arguments left in line
+                    PrintErrorCode(600);           //Error 600; extra arguments left in line
             }
             //invalid command name
             else
@@ -165,11 +170,77 @@ void Manager::PrintErrorCode(int num)
 
 // Run LOAD
 void Manager::Load(){
-    PrintSuccess("LOAD");
+    if (!(SQptr->IsEmpty()) || SBSTptr->getRoot() || SLptr->getHead()) { //if data already exist in datastructures
+        PrintErrorCode(100);
+        return;
+    }
+    else {
+        //open file stream
+        ifstream fsub;  //subtitle filestream
+        fsub.open("subtitle.txt");
+        if (!fsub) {        //failed to open
+            PrintErrorCode(100);
+            fsub.close();
+            return;
+        }
+        else
+        {
+            Time inputTime;
+            string inputString;
+            try 
+            {
+                //get data from subtitle.txt
+                while (fsub >> inputTime)                              //get input subtitle time
+                {
+                    fsub.ignore(1);                                     //ignore whitespace between time and string
+                    getline(fsub, inputString);                        //get input subtitle data
+                    //try push to SubtitleQueue
+                    SQptr->Push(inputTime, inputString);
+                }
+                //successfully Loadd, print result
+                flog << "===== LOAD =====" << endl;
+                SQptr->PrintAll(flog);
+//                flog << SQptr->GetNodeCnt() << " subtitles loaded." << endl; //for debug
+                flog << "===============\n" << endl;
+            }
+            catch (int nodecnt)             //catch; full queue push() fatal error
+            {  
+                //error log (no project specification, made option
+                PrintErrorCode(100);
+                flog << "full push fatal error: cannot push to subtitle queue. terminate program" << endl;
+                exit(-1);
+            }
+        }
+    }
+
 }
 // Run QPOP
-void Manager::Qpop(){
-    PrintSuccess("QPOP");
+void Manager::Qpop() {
+    if (SQptr->IsEmpty()) {             //empty queue pop() fatal error
+        PrintErrorCode(200);            //print error log
+        exit(-1);                       //terminate program
+    }
+    else
+    {
+        try {
+            //get SubtitleQueueNode count, only work if Subtitle queue is not empty 
+            while (SQptr->GetNodeCnt() > 0)
+            {
+                //Pop() the Subtitle Queue,insert to subtitle BST
+//                flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;     //for debug
+//                std::pair<Time, std::string> thePair = SQptr->Front();            //for debug
+//                flog << thePair.first << " - " << thePair.second << endl;         //for debug
+                SBSTptr->Insert(SQptr->Pop());
+            }
+//            SBSTptr->PrintStructure(SBSTptr->getRoot());            //for debug
+            PrintSuccess("QPOP");
+        }
+        catch (int nodecnt)             //must not occur
+        {
+            flog << "Qpop malfunctioned" << endl;
+            exit(-1);
+        }
+    }
 }
 // Run PRINT 
 void Manager::Print() {

@@ -129,8 +129,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
-    <ClCompile Include="others\linkedList.cpp" />
-    <ClCompile Include="others\queue.cpp" />
+    <ClCompile Include="others\bst.cpp" />
     <ClCompile Include="SectionList.cpp" />
     <ClCompile Include="SubtitleBST.cpp" />
     <ClCompile Include="SubtitleQueue.cpp" />
@@ -143,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="others\bst.h" />
     <ClInclude Include="SectionList.h" />
     <ClInclude Include="SectionListNode.h" />
     <ClInclude Include="SubtitleBST.h" />

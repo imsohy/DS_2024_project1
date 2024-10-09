@@ -52,7 +52,7 @@ bool Time::operator==(const Time& other) const {
     return hours == other.hours && minutes == other.minutes && seconds == other.seconds;
 }
 
-istream& operator>>(istream& is, Time& time)
+std::istream& operator>>(std::istream& is, Time& time)
 {
     string timeStr; //saves the string 
     is >> timeStr;  //get string until the first whitespace
@@ -86,8 +86,9 @@ istream& operator>>(istream& is, Time& time)
         return is;
     }
 
-    // Convert each part to an integer and check if they are within valid ranges
-    try {
+    // Try to convert each part to an integer and check if they are within valid ranges
+    try {   //function stoi() can fail because given value is not an integer
+        //convert each part to integer, convert to short
         Time temp(stoi(hoursStr), stoi(minutesStr), stoi(secondsStr));
 
         // Check hours >= 0, minutes and seconds should be between 0 and 59
@@ -100,19 +101,14 @@ istream& operator>>(istream& is, Time& time)
         //No issues checked, copy
         time = temp;
         return is;
-    }
-    catch (const invalid_argument& e) {
-        time = Time(-1, 0, 0);
-        is.setstate(ios::failbit);
-        return is;
-    }
-    catch (const out_of_range& e) {
+    } 
+    catch (const invalid_argument& e) { //stoi error; not a number
         time = Time(-1, 0, 0);
         is.setstate(ios::failbit);
         return is;
     }
 }
-ostream& operator<<(ostream& os, const Time& time)
+std::ostream& operator<<(std::ostream& os, const Time& time)
 {
     //if the time had error
     if (time.hours < 0)

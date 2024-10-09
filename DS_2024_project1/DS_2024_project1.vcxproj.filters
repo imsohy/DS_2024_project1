@@ -33,16 +33,13 @@
     <ClCompile Include="SubtitleQueue.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Time.h">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="others\linkedList.cpp">
-      <Filter>소스 파일\others</Filter>
+    <ClCompile Include="Time.h">
+      <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="others\queue.cpp">
+    <ClCompile Include="others\bst.cpp">
       <Filter>소스 파일\others</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,23 +58,26 @@
     <ClInclude Include="SectionList.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SectionListNode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="SubtitleBST.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SubtitleQueue.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="SubtitleListNode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SubtitleBSTNode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="SubtitleListNode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SubtitleQueue.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="SubtitleQueueNode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SectionListNode.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="others\bst.h">
+      <Filter>소스 파일\others</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
