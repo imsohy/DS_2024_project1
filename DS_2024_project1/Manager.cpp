@@ -232,7 +232,6 @@ void Manager::Qpop() {
 //                flog << thePair.first << " - " << thePair.second << endl;         //for debug
                 SBSTptr->Insert(SQptr->Pop());
             }
-//            SBSTptr->PrintStructure(SBSTptr->getRoot());            //for debug
             PrintSuccess("QPOP");
         }
         catch (int nodecnt)             //must not occur

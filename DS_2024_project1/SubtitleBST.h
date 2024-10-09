@@ -18,6 +18,4 @@ public:
 	// Search
 	// Delete
 
-//	short total_inserted = 0;
-//	void PrintStructure(SubtitleBSTNode* node, int space = 0, int height = 5);
 };

@@ -27,5 +27,4 @@ public:
 	void setLeft(SubtitleBSTNode* left)		{ this->left = left; }
 	void setRight(SubtitleBSTNode* right)	{ this->right = right; }
 
-//	short inserted_at = 0;				//remembers what line this data was in SubtitleQueue, for debug
 };
