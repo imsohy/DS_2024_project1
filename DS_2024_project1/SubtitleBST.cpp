@@ -31,7 +31,7 @@ void SubtitleBST::Insert(const std::pair<Time, std::string>& thePair) 	//pp is t
 	//perform insertion (pp is the last searched node, p is the right place of thePair
 	p = new SubtitleBSTNode(thePair);
 	
-//	p->inserted_at = ++total_inserted;
+	p->inserted_at = ++total_inserted;
 
 	if (root != nullptr) //tree not empty
 		if (thePair.first < pp->getSubTime()) pp->setLeft(p);
@@ -42,7 +42,7 @@ void SubtitleBST::Insert(const std::pair<Time, std::string>& thePair) 	//pp is t
 }
 // Print
 
-/*void SubtitleBST::PrintStructure(SubtitleBSTNode* node, int space, int height)
+void SubtitleBST::PrintStructure(SubtitleBSTNode* node, int space, int height)
 {
 	if (node == nullptr) return;
 	space += height;
@@ -53,7 +53,7 @@ void SubtitleBST::Insert(const std::pair<Time, std::string>& thePair) 	//pp is t
 
 	PrintStructure(node->getLeft(), space);
 }
-*/
+
 // Search
 
 // Delete
