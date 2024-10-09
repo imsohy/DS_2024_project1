@@ -12,6 +12,8 @@ public:
 	bool IsEmpty();
 	bool IsFull();
 	void Push();
+	/*
 	SubtitleQueueNode Pop();
 	SubtitleQueueNode Front();
+	*/
 };

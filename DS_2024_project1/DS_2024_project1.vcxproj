@@ -129,9 +129,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="others\linkedList.cpp" />
+    <ClCompile Include="others\queue.cpp" />
     <ClCompile Include="SectionList.cpp" />
     <ClCompile Include="SubtitleBST.cpp" />
     <ClCompile Include="SubtitleQueue.cpp" />
+    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="command.txt" />

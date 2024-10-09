@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\others">
+      <UniqueIdentifier>{d43a23b3-dcb9-4b43-b4f5-ee4030d03b99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -29,6 +32,18 @@
     </ClCompile>
     <ClCompile Include="SubtitleQueue.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="others\linkedList.cpp">
+      <Filter>소스 파일\others</Filter>
+    </ClCompile>
+    <ClCompile Include="others\queue.cpp">
+      <Filter>소스 파일\others</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
