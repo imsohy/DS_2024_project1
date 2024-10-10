@@ -39,7 +39,7 @@ void SubtitleQueue::Push(const Time& inputTime, const std::string& inputSub)
 		}
 		nodecnt++;
 	}
-	else throw nodecnt;		//full queue push() fatal error; 
+	else throw "fatal error: full queue push()";		//full queue push() fatal error; 
 }
 std::pair<Time,std::string> SubtitleQueue::Pop()
 {
@@ -53,13 +53,13 @@ std::pair<Time,std::string> SubtitleQueue::Pop()
 		nodecnt--;
 		return pairedData;
 	}
-	else throw nodecnt;		//empty queue pop() error
+	else throw "fatal error: empty queue pop()";		//empty queue pop() fatal error (will not happen)
 }
 std::pair<Time, std::string> SubtitleQueue::Front() const
 {
 	if (!IsEmpty())
 		return std::make_pair(front->GetSubTime(), front->GetSubString());
-	else throw nodecnt;		//empty queue front() error
+	else throw "empty queue front() error";		//empty queue front() error (will not happen)
 }
 void SubtitleQueue::PrintAll(std::ostream& os)
 {

@@ -203,11 +203,10 @@ void Manager::Load(){
 //                flog << SQptr->GetNodeCnt() << " subtitles loaded." << endl; //for debug
                 flog << "===============\n" << endl;
             }
-            catch (int nodecnt)             //catch; full queue push() fatal error
+            catch (const char* pusherror)             //catch; full queue push() fatal error
             {  
-                //error log (no project specification, made option
                 PrintErrorCode(100);
-                flog << "full push fatal error: cannot push to subtitle queue. terminate program" << endl;
+                flog << pusherror << ", cannot push to subtitle queue.terminate program" << endl;
                 exit(-1);
             }
         }
@@ -216,27 +215,27 @@ void Manager::Load(){
 }
 // Run QPOP
 void Manager::Qpop() {
-    if (SQptr->IsEmpty()) {             //empty queue pop() fatal error
+    if (SQptr->IsEmpty()) {             //tried QPOP in empty queue
         PrintErrorCode(200);            //print error log
         exit(-1);                       //terminate program
     }
     else
     {
         try {
-            //get SubtitleQueueNode count, only work if Subtitle queue is not empty 
+            //get SubtitleQueueNode count, only work if Subtitle queue is not empty (nodecnt > 0)
             while (SQptr->GetNodeCnt() > 0)
             {
                 //Pop() the Subtitle Queue,insert to subtitle BST
-//                flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;     //for debug
-//                std::pair<Time, std::string> thePair = SQptr->Front();            //for debug
-//                flog << thePair.first << " - " << thePair.second << endl;         //for debug
+    //                flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;     //for debug
+    //                std::pair<Time, std::string> thePair = SQptr->Front();            //for debug
+    //                flog << thePair.first << " - " << thePair.second << endl;         //for debug
                 SBSTptr->Insert(SQptr->Pop());
             }
             PrintSuccess("QPOP");
         }
-        catch (int nodecnt)             //must not occur
+        catch (const char* duplicatederr)
         {
-            flog << "Qpop malfunctioned" << endl;
+            flog << duplicatederr << endl;  //caught duplicated key
             exit(-1);
         }
     }

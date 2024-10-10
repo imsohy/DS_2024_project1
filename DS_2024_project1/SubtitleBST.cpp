@@ -24,9 +24,8 @@ void SubtitleBST::Insert(const std::pair<Time, std::string>& thePair) 	//pp is t
 		pp = p;					//store current pointer
 		if (thePair.first < p->getSubTime()) p = p->getLeft();
 		else if (thePair.first > p->getSubTime()) p = p->getRight();
-		//no duplicated element
+		else throw "fatal error: duplicated key node inserted";
 	}
-
 
 	//perform insertion (pp is the last searched node, p is the right place of thePair
 	p = new SubtitleBSTNode(thePair);
