@@ -1,11 +1,10 @@
 #pragma once
+#include "basicheader.h"		//include several headers in basicheader.h
 #include "SubtitleQueue.h"
 #include "SubtitleBST.h"
 #include "SectionList.h"
-#include "Time.h"
 #include <fstream>
-#include <sstream>							//to read command by stringstream
-#include <string>							//to use string
+
 
 class Manager
 {

@@ -1,5 +1,5 @@
 #include "Time.h"
-using namespace std;
+
 bool Time::parseTime(const string& timeStr) {
     // Check if the length of the string is exactly 8 (XX:XX:XX)
         if (timeStr.length() != 8) {
@@ -52,6 +52,12 @@ bool Time::operator==(const Time& other) const {
     return hours == other.hours && minutes == other.minutes && seconds == other.seconds;
 }
 
+bool Time::operator>=(const Time& other) const {
+    return (*this > other) || (*this == other);
+}
+bool Time::operator<=(const Time& other) const {
+    return (*this < other) || (*this == other);
+}
 std::istream& operator>>(std::istream& is, Time& time)
 {
     string timeStr; //saves the string 

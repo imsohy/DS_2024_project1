@@ -1,34 +1,38 @@
 #pragma once
-#include "Time.h"
-#include <string>
+#include "basicheader.h"
+
 class SubtitleQueueNode
 {
 private:
 	//subtitle data
-	Time subtitleTime;			//subtitle time
-	std::string subtitleString;	//subtitle string
+	Datapair data;
 
 	//node link data
-	SubtitleQueueNode* nextNode = nullptr;	//next SubtititleQueueNode;	 only accessible to SubtitleQueue and this class
+	SubtitleQueueNode* nextNode;	//next SubtititleQueueNode. initialized nullptr
+
 public:
-	SubtitleQueueNode() {};
-	//setting data
-	SubtitleQueueNode(const Time& inputTime, const std::string& inputString, SubtitleQueueNode* inputLink = nullptr) { 
-		subtitleTime = inputTime;
-		subtitleString = inputString;
-		nextNode = inputLink;
+	//base constructor
+	SubtitleQueueNode() : nextNode(nullptr) {};
+	//constructor with parameter
+	SubtitleQueueNode(const Time& inputTime, const std::string& inputString) { 
+		data = std::make_pair(inputTime, inputString);
+		nextNode = nullptr;
+	}
+	SubtitleQueueNode(const Datapair& inputPair) {
+		data = inputPair;
+		nextNode = nullptr;
 	}
 	//copy constructor only gets value
 	SubtitleQueueNode(const SubtitleQueueNode& origin) {
-		subtitleTime = origin.subtitleTime;
-		subtitleString = origin.subtitleString;
+		data = origin.data;
 		nextNode = nullptr;
 	}
 	~SubtitleQueueNode() {	}
 
 	//getting data
-	inline Time GetSubTime() { return subtitleTime; }		//get subtitleTime of this node
-	inline std::string GetSubString() { return subtitleString; }	//get subtitleString of this node
+	inline Datapair GetData() { return data; }		//return data pair
+	inline Time GetSubTime() { return data.first; }		//get subtitle Time of this node
+	inline std::string GetSubString() { return data.second; }	//get subtitle String of this node
 	//getting next node
 	inline SubtitleQueueNode* GetNext() {return nextNode;}			//get nextNode of this node
 	//modify next node

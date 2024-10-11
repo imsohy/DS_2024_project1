@@ -1,13 +1,11 @@
 #pragma once
-#include "Time.h"
-#include <string>
-#include <utility>
+#include "basicheader.h"
 
 class SubtitleBSTNode
 {
 private:
 	//data field
-	std::pair<Time, std::string> data;
+	Datapair data;
 
 	//BST node specification
 	SubtitleBSTNode*	left;
@@ -16,11 +14,12 @@ private:
 public:
 
 	SubtitleBSTNode() : left(nullptr), right(nullptr) {}
-	SubtitleBSTNode(std::pair<Time, std::string> inputPair) : left(nullptr), right(nullptr), data(inputPair) {}
+	SubtitleBSTNode(Datapair inputPair) : left(nullptr), right(nullptr), data(inputPair) {}
 	~SubtitleBSTNode() {}
 
 	Time getSubTime() { return data.first; }
 	std::string getSubString() { return data.second; }
+	Datapair getData() { return data; }
 	SubtitleBSTNode*	getLeft()				{ return left; }
 	SubtitleBSTNode*	getRight()				{ return right; }
 

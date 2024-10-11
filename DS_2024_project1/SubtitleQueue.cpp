@@ -12,7 +12,7 @@ SubtitleQueue::~SubtitleQueue()
 	while (front != nullptr)
 	{
 		deleteNode = front;
-		front = deleteNode->GetNext();
+		front = front->GetNext();
 		delete deleteNode;
 		nodecnt--;
 	}
@@ -29,7 +29,7 @@ void SubtitleQueue::Push(const Time& inputTime, const std::string& inputSub)
 {
 	if (!IsFull())
 	{
-		SubtitleQueueNode* newnode = new SubtitleQueueNode(inputTime, inputSub, nullptr);
+		SubtitleQueueNode* newnode = new SubtitleQueueNode(inputTime, inputSub);
 		if (IsEmpty())
 			front = rear = newnode;
 		else
@@ -41,27 +41,41 @@ void SubtitleQueue::Push(const Time& inputTime, const std::string& inputSub)
 	}
 	else throw "fatal error: full queue push()";		//full queue push() fatal error; 
 }
-std::pair<Time,std::string> SubtitleQueue::Pop()
+void SubtitleQueue::Push(const Datapair& inputPair)
+{
+	if (!IsFull())
+	{
+		SubtitleQueueNode* newnode = new SubtitleQueueNode(inputPair);
+		if (IsEmpty())
+			front = rear = newnode;
+		else {
+			rear->SetNext(newnode);
+			rear= rear->GetNext();
+		}
+		nodecnt++;
+	}
+	else throw "fatal error: full queue push()";		//full queue push() fatal error (will not happen)
+}
+Datapair SubtitleQueue::Pop()
 {
 	if (!IsEmpty())
 	{
 		SubtitleQueueNode* deleteNode = front;
 		front = front->GetNext();
-		std::pair<Time, std::string> pairedData;
-		pairedData = std::make_pair(deleteNode->GetSubTime(),deleteNode->GetSubString());
+		Datapair deleteNodeData = deleteNode->GetData();
 		delete deleteNode;
 		nodecnt--;
-		return pairedData;
+		return deleteNodeData;
 	}
-	else throw "fatal error: empty queue pop()";		//empty queue pop() fatal error (will not happen)
+	else throw "fatal error: empty queue pop()";		//empty queue pop() fatal error (do not happen)
 }
-std::pair<Time, std::string> SubtitleQueue::Front() const
+Datapair SubtitleQueue::Front() const
 {
 	if (!IsEmpty())
-		return std::make_pair(front->GetSubTime(), front->GetSubString());
-	else throw "empty queue front() error";		//empty queue front() error (will not happen)
+		return front->GetData();
+	else throw "empty queue front() error";		//empty queue front() error (do not happen)
 }
-void SubtitleQueue::PrintAll(std::ostream& os)
+void SubtitleQueue::PrintQueue(std::ostream& os)
 {
 	SubtitleQueueNode* walker = front;
 	while (walker != nullptr)

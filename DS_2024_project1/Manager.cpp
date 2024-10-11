@@ -1,11 +1,10 @@
 #include "Manager.h"
-using namespace std;
 
 Manager::Manager()
 {
-    SQptr = new SubtitleQueue;
-    SBSTptr = new SubtitleBST;
-    SLptr = new SectionList;
+    SQptr = nullptr;
+    SBSTptr = nullptr;
+    SLptr = nullptr;
 }
 Manager::~Manager()     //EXIT
 {
@@ -89,7 +88,7 @@ void Manager::Run(const char* command)
                         PrintErrorCode(300);               //Error 300; argument not a number
                     }
                     catch (const out_of_range& e) {
-                        PrintErrorCode(300);               //Error 300; argument not a number
+                        PrintErrorCode(300);               //Error 300; argument out of range of int
                     }
                 }
             }
@@ -99,7 +98,7 @@ void Manager::Run(const char* command)
                 //get the arguments / check if its valid
                 if (!(iss >> section_num >> start_time >> end_time)) {
                     PrintErrorCode(400);                   //Error 400; invalid or insufficient argument
-                    iss.clear();                        //clear stream failbit
+                    iss.clear();                            //clear stream failbit
                 }
                 //check if there's no extra arguments
                 else if (!(iss>>extra))
@@ -140,7 +139,7 @@ void Manager::Run(const char* command)
                     break;
                 }
                 else
-                    PrintErrorCode(600);           //Error 600; extra arguments left in line
+                    PrintErrorCode(1000);           //Error 1000; extra arguments left in line
             }
             //invalid command name
             else
@@ -168,95 +167,135 @@ void Manager::PrintErrorCode(int num)
     flog << "===============\n" << endl;
 }
 
-// Run LOAD
+// LOAD
 void Manager::Load(){
-    if (!(SQptr->IsEmpty()) || SBSTptr->getRoot() || SLptr->getHead()) { //if data already exist in datastructures
+    //allocate new Subtitle Queue if SQptr isn't allocated
+    if(!SQptr) SQptr = new SubtitleQueue();
+    //if data already exist in datastructures print errorcode 100
+    else if ( !(SQptr->IsEmpty()) ||            //if Subtitle Queue has data
+        (SBSTptr && SBSTptr->getRoot()) ||      //if Subtitle BST exist and it has data
+        (SLptr && SLptr->getHead()) )          //if Section List exist and it has data
+    {
         PrintErrorCode(100);
         return;
     }
-    else {
-        //open file stream
-        ifstream fsub;  //subtitle filestream
-        fsub.open("subtitle.txt");
-        if (!fsub) {        //failed to open
-            PrintErrorCode(100);
-            fsub.close();
-            return;
-        }
-        else
-        {
-            Time inputTime;
-            string inputString;
-            try 
-            {
-                //get data from subtitle.txt
-                while (fsub >> inputTime)                              //get input subtitle time
-                {
-                    fsub.ignore(1);                                     //ignore whitespace between time and string
-                    getline(fsub, inputString);                        //get input subtitle data
-                    //try push to SubtitleQueue
-                    SQptr->Push(inputTime, inputString);
-                }
-                //successfully Loadd, print result
-                flog << "===== LOAD =====" << endl;
-                SQptr->PrintAll(flog);
-//                flog << SQptr->GetNodeCnt() << " subtitles loaded." << endl; //for debug
-                flog << "===============\n" << endl;
-            }
-            catch (const char* pusherror)             //catch; full queue push() fatal error
-            {  
-                PrintErrorCode(100);
-                flog << pusherror << ", cannot push to subtitle queue.terminate program" << endl;
-                exit(-1);
-            }
-        }
-    }
-
-}
-// Run QPOP
-void Manager::Qpop() {
-    if (SQptr->IsEmpty()) {             //tried QPOP in empty queue
-        PrintErrorCode(200);            //print error log
-        exit(-1);                       //terminate program
+    
+    //open file stream
+    ifstream fsub;  //subtitle filestream
+    fsub.open("subtitle.txt");
+    if (!fsub) {        //failed to open
+        PrintErrorCode(100);
+        fsub.close();
+        return;
     }
     else
     {
-        try {
-            //get SubtitleQueueNode count, only work if Subtitle queue is not empty (nodecnt > 0)
-            while (SQptr->GetNodeCnt() > 0)
-            {
-                //Pop() the Subtitle Queue,insert to subtitle BST
-    //                flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;     //for debug
-    //                std::pair<Time, std::string> thePair = SQptr->Front();            //for debug
-    //                flog << thePair.first << " - " << thePair.second << endl;         //for debug
-                SBSTptr->Insert(SQptr->Pop());
-            }
-            PrintSuccess("QPOP");
-        }
-        catch (const char* duplicatederr)
+        Time inputTime;
+        string inputString;
+        try 
         {
-            flog << duplicatederr << endl;  //caught duplicated key
+            //get data from subtitle.txt
+            while (fsub >> inputTime)                              //get input subtitle time
+            {
+                fsub.ignore(1);                                     //ignore whitespace between time and string
+                getline(fsub, inputString);                        //get input subtitle data
+                //try push to SubtitleQueue
+                SQptr->Push(inputTime, inputString);
+            }
+            //successfully Loadd, print result
+            flog << "===== LOAD =====" << endl;
+            SQptr->PrintQueue(flog);
+//                flog << SQptr->GetNodeCnt() << " subtitles loaded." << endl; //for debug
+            flog << "===============\n" << endl;
+        }
+        //if data is more than 100 and push() from data 
+        catch (const char* pusherror)             
+        {  
+            PrintErrorCode(100);
+            flog << pusherror << ", cannot push to subtitle queue.terminate program" << endl;
             exit(-1);
         }
     }
 }
-// Run PRINT 
+
+// QPOP
+void Manager::Qpop() {
+    //allocate new SubtitleBST if SubtitleBST ptr is null
+    if (!SBSTptr) SBSTptr = new SubtitleBST();
+    //if data doesn't exist in SubtitleQueue ptr then PrintErrorCode() and terminate program
+    if (!SQptr || SQptr->IsEmpty()) {   //if SubtitleQueue not allocated or if its empty
+        PrintErrorCode(200);            //print error log
+        exit(-1);                       //terminate program
+    }
+    //get SubtitleQueueNode count, only work if Subtitle queue is not empty (nodecnt > 0)
+    while (!(SQptr->IsEmpty()))
+    {
+        //Pop() the Subtitle Queue,insert to subtitle BST
+// for debug (prints Datapair to be inserted)
+//                flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;    
+//                std::pair<Time, std::string> thePair = SQptr->Front();            
+//                flog << thePair.first << " - " << thePair.second << endl;         
+        SBSTptr->Insert(SQptr->Pop());
+    }
+    PrintSuccess("QPOP");
+}
+// PRINT 
 void Manager::Print() {
-    PrintSuccess("PRINT");
+    if (!SBSTptr) { PrintErrorCode(300); return; }
+    flog << "===== PRINT =====" << endl;
+    flog << "Subtitle_BST" << endl;
+    SBSTptr->PrintBST(flog);
+    flog << "===============\n" << endl;
 }
-// Run PRINT section_num
-void Manager::Print(const int& section_num) {
-    PrintSuccess("PRINT");
+// PRINT section_num
+void Manager::Print(const int& key_section_num) {
+    if (!SLptr) { PrintErrorCode(300); return;} //return if Section List not created
+    try
+    {   
+        //search SectionListNode that matches the key
+        SectionListNode* section_header = SLptr->Search(flog, key_section_num);
+        
+        //print section
+        flog << "===== PRINT =====" << endl;
+        SLptr->PrintSection(flog, section_header);
+        flog << "===============\n" << endl;
+    }
+    catch (const char* notmatched)
+    {
+        PrintErrorCode(300); return;    //if section number doesn't exist, print error code
+    }
 }
-// Run SECTION
+// SECTION (...)
 void Manager::Section(const int& section_num, const Time& start_time, const Time& end_time) {
+    //allocate new SectionList if it doesn't exist 
+    if (!SLptr) SLptr = new SectionList();
+    //create new SectionListNode to tail (even though SubtitleQueue doesn't exist or no node will be found in SearchRange())
+    SLptr->GenerateNewSection(section_num);
+    //PrintErrorCode() if SubtitleBST pointer is null
+    if (!SQptr) { PrintErrorCode(400); return; }
+    //allocate buffer SubtitleQueue. this saves SearchRange() result from SubtitleBST.
+    SubtitleQueue* bufferSQ = new SubtitleQueue(CAP);
+    //Search every SubtiteBSTNode in the range of start_time ~ end_time, get result.
+    SBSTptr->SearchRange(start_time, end_time, bufferSQ);
+    //print error message if no node found in SearchRange()
+    if (bufferSQ->IsEmpty()) { 
+        PrintErrorCode(400); 
+        delete bufferSQ;            //deallocate bufferSQ
+        return; 
+    }
+    //Pop buffer, insert to generated section head.
+    while (!(bufferSQ->IsEmpty())) {
+        SLptr->InsertSubtitle(bufferSQ->Pop());
+    }
+    delete bufferSQ;               //deallocate bufferSQ
     PrintSuccess("SECTION");
+    return;
 }
-// Run DELETE equal
+// DELETE EQUAL (...)
 void Manager::DeleteEqual(const Time& key_time) {
     PrintSuccess("DELETE");
 }
-// Run DETETE under
+// DETETE UNDER (...)
 void Manager::DeleteUnder(const Time& key_time) {
     PrintSuccess("DELETE");
 }

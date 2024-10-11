@@ -129,20 +129,19 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
-    <ClCompile Include="others\bst.cpp" />
     <ClCompile Include="SectionList.cpp" />
     <ClCompile Include="SubtitleBST.cpp" />
     <ClCompile Include="SubtitleQueue.cpp" />
     <ClCompile Include="Time.cpp" />
-    <ClCompile Include="Time.h" />
+    <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="command.txt" />
     <Text Include="subtitle.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basicheader.h" />
     <ClInclude Include="Manager.h" />
-    <ClInclude Include="others\bst.h" />
     <ClInclude Include="SectionList.h" />
     <ClInclude Include="SectionListNode.h" />
     <ClInclude Include="SubtitleBST.h" />

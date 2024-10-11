@@ -1,7 +1,5 @@
 #pragma once
 #include "SubtitleQueueNode.h"
-#include <utility>
-#define CAP 100
 
 //Subtitle Queue, linked list data structure
 class SubtitleQueue
@@ -18,8 +16,11 @@ public:
 	bool IsEmpty() const;					//returns true if nodecnt == 0
 	bool IsFull() const;					//returns true if nodecnt == capacity
 	void Push(const Time& inputTime, const std::string& inputSub);	//if the queue is not full, push new SubtitleQueueNode on rear
-	std::pair<Time, std::string> Pop();					//if the queue is not empty, return the front data as pair, pop.
-	std::pair<Time, std::string> Front() const;			//if the queue is not empty, return the front data as pair.
-	void PrintAll(std::ostream& os);			//print data from the front to the rear
+	void Push(const Datapair& inputPair);
+	Datapair Pop();					//if the queue is not empty, return the front data as pair, pop.
+	Datapair Front() const;			//if the queue is not empty, return the front data as pair.
+	void PrintQueue(std::ostream& os);			//print data from the front to the rear
+
+	//for debug
 	inline short GetNodeCnt() { return nodecnt; }	//returns nodecnt;
 };

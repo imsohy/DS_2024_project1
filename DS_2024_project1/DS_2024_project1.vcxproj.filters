@@ -39,9 +39,6 @@
     <ClCompile Include="Time.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="others\bst.cpp">
-      <Filter>소스 파일\others</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="command.txt">
@@ -76,8 +73,8 @@
     <ClInclude Include="SubtitleQueueNode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="others\bst.h">
-      <Filter>소스 파일\others</Filter>
+    <ClInclude Include="basicheader.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
