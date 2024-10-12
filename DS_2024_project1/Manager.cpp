@@ -271,7 +271,7 @@ void Manager::Print(const int& key_section_num) {
         SLptr->PrintSection(flog, section_header);
         flog << "===============\n" << endl;
     }
-    catch (const char* notmatched)
+    catch (const char* notfound)
     {
         PrintErrorCode(300); return;    //if section number doesn't exist, print error code
     }
@@ -311,7 +311,7 @@ void Manager::DeleteEqual(const Time& delete_time) {
         PrintSuccess("DELETE");
     }
     //catch error if SubtitleBST doesn't have any nodes that,
-    //subtitle Time equals to delete_time (or, empty)
+    //subtitle Time = delete_time (or, if it was empty tree)
     catch (const char* notfound)
     {
         PrintErrorCode(500);
@@ -319,5 +319,16 @@ void Manager::DeleteEqual(const Time& delete_time) {
 }
 // DETETE UNDER (...)
 void Manager::DeleteUnder(const Time& delete_time) {
-    
+    if (!SBSTptr) { PrintErrorCode(500); return; } //if SubtitleBST pointer is not allocated, return.
+    try 
+    {
+        SBSTptr->DeleteUnder(delete_time);
+        PrintSuccess("DELETE");
+    }
+    //catch error if SubtitleBST doesn't have any nodes that
+    //subtitle Time < delete_time (or, if it was empty tree)
+    catch (const char* notfound)
+    {
+        PrintErrorCode(500);
+    }
 }

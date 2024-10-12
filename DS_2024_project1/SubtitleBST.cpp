@@ -1,5 +1,6 @@
 #include "SubtitleBST.h"
-
+#include <iostream> //for debug
+#include <iomanip> //for debug
 
 SubtitleBST::SubtitleBST() : root(nullptr) {}
 SubtitleBST::~SubtitleBST()
@@ -82,15 +83,15 @@ void SubtitleBST::PrintBST(ostream& os, SubtitleBSTNode* const & node) const{
 /*Delete*/
 void SubtitleBST::DeleteBST(SubtitleBSTNode* const& node)
 {
-	if (node == nullptr) return;		//visit
+    //Post-Order delete every node
+    if (node == nullptr) return;
 	DeleteBST(node->getLeft());			//go to left subtree
 	DeleteBST(node->getRight());		//go to right subtree
-	delete node;
+	delete node;                        //visit(delete)
 }
-
 void SubtitleBST::DeleteEveryEqual(const Time& delete_time)
 {
-    bool found = false;                                     //true if any node have been deleted.
+    bool deleted = false;                                     //true if any node have been deleted.
     while (true) {
         SubtitleBSTNode* parent = nullptr;                  //SearchEqual() will save parent node here.
         // Find the node along with its parent
@@ -99,33 +100,68 @@ void SubtitleBST::DeleteEveryEqual(const Time& delete_time)
 
         // Delete the found node
         DeleteNode(nodeToDelete, parent);
-        found = true;
+        deleted = true;
     }
     //if not found even once (inclue empty root case)
-    if (!found)
+    if (!deleted)
         throw "not found";
 }
+void SubtitleBST::DeleteUnder(const Time& delete_time)
+{
+    bool deleted = false;                           // track if any node has been deleted
+    root = DeleteUnder(root, delete_time, deleted); //return root the result of Post-Order delete
+    // If no node was deleted, throw an exception
+    if (!deleted) 
+        throw "not found";
+}
+SubtitleBSTNode* SubtitleBST::DeleteUnder(SubtitleBSTNode* node, const Time& delete_time, bool& deleted)
+{
+    // base case: if the current node is null, return null
+    if (node == nullptr) return nullptr;
 
+    // Post-Order traverse the tree.
+    
+    //postorder recurrence
+    node->setLeft(DeleteUnder(node->getLeft(), delete_time, deleted)); //Recurse Left subtree 
+    node->setRight(DeleteUnder(node->getRight(), delete_time, deleted)); //Recurse Right subtree
+    // now check the current node. if its time is less than delete_time, delete it
+    if (node->getSubTime() < delete_time)
+    {
+        SubtitleBSTNode* parent = nullptr;                                  // parent of this node
+        DeleteNode(node, parent);                                           // call DeleteNode(), delete node.
+
+        deleted = true; 
+
+        PrintStructure(cout, root, 2); //for debug
+        // return null after deletion, as the node is no longer valid
+        return nullptr;
+    }
+    PrintStructure(cout, root, 2); //for debug
+    // if the node's time is not less than delete_time, return the node itself (not modified)
+    return node;
+}
 SubtitleBSTNode* SubtitleBST::SearchEqual(const Time& delete_time, SubtitleBSTNode* parent) const
 {
     SubtitleBSTNode* pCur = root;       //start searching from root
-    parent = nullptr;  // Initialize parent to nullptr
+    parent = nullptr;                  // Initialize parent to nullptr
+    
+    //binary search the tree.
+    //search key: delete_time. 
     while (pCur) {
         if (delete_time < pCur->getSubTime()) {
             parent = pCur;  // Save the current node as parent
-            pCur = pCur->getLeft(); // Move to left subtree
+            pCur = pCur->getLeft(); // move to left subtree
         }
         else if (delete_time > pCur->getSubTime()) {
             parent = pCur;  // Save the current node as parent
             pCur = pCur->getRight(); // Move to right subtree
         }
         else {
-            return pCur;  // Found the node
+            return pCur;  // match successed
         }
     }
     return nullptr;  // Not found, or if root was nullptr(empty tree)
 }
-
 void SubtitleBST::DeleteNode(SubtitleBSTNode* nodeToDelete, SubtitleBSTNode* parent)
 {
     if (!nodeToDelete) throw "search malfunctioned"; // if search malfunctioned, given nullptr. (not going to happen)
@@ -170,14 +206,14 @@ void SubtitleBST::DeleteNode(SubtitleBSTNode* nodeToDelete, SubtitleBSTNode* par
     {
         // find the successor (= minimum node in the right subtree)
         SubtitleBSTNode* successorParent;                                                   // saves successor's parent while FindMin().
-        SubtitleBSTNode* successor = FindMin(nodeToDelete->getRight(), successorParent);    //start from nodeToDelete's rightChild as a root, return smallest node to successor, saves its parent to successorparent
-        // Replace the data of nodeToDelete with the successor's data
+        SubtitleBSTNode* successor = FindMin(nodeToDelete->getRight(), successorParent);    // start from nodeToDelete's rightChild as a root, return smallest node to successor, saves its parent to successorparent
+        // replace the data of nodeToDelete with the successor's data
         nodeToDelete->setData(successor->getData());
 
         //***successor cannot have left child (because it is leftmost node of nodeToDelete's right subtree.)
         //it can have no child or only right child, so just connecting successorParent wih successor's rightchild will work.
 
-        // Delete the successor node
+        // Delete the successor node.
         // successor is a left child (nodeToDelete right-> successorParent left -> node left-> ... -> successor)
         if (successorParent->getLeft() == successor) {
             successorParent->setLeft(successor->getRight());
@@ -186,16 +222,40 @@ void SubtitleBST::DeleteNode(SubtitleBSTNode* nodeToDelete, SubtitleBSTNode* par
         else {
             successorParent->setRight(successor->getRight());
         }
+        //deallocate node
         delete successor;
     }
 }
-
 SubtitleBSTNode* SubtitleBST::FindMin(SubtitleBSTNode* node, SubtitleBSTNode*& parent) const
 {
     parent = nullptr; // Initialize parent to nullptr
     while (node->getLeft()) {
-        parent = node;  // Save the current node as parent
-        node = node->getLeft(); // Move to the leftmost node
+        parent = node;  // save the current node as parent
+        node = node->getLeft(); // move to the leftmost node.
     }
-    return node;  // Return the minimum node
+    return node;  // return the minimum node
+}
+
+//for debug
+void SubtitleBST::PrintStructure(ostream& os, SubtitleBSTNode* node, int space) const
+{
+    int COUNT = 10;
+
+    // return if node is null
+    if (node == nullptr)
+        return;
+
+    // print right node recursively
+    space += COUNT;
+
+    PrintStructure(os, node->getRight(), space);
+
+    // print current node
+    cout << endl;
+    for (int i = COUNT; i < space; i++)
+        cout << " ";
+    cout << node->getSubTime() << "\n";
+
+    // print left node recursive
+    PrintStructure(os, node->getLeft(), space);
 }
