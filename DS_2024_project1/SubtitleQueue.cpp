@@ -75,7 +75,7 @@ Datapair SubtitleQueue::Front() const
 		return front->GetData();
 	else throw "empty queue front() error";		//empty queue front() error (do not happen)
 }
-void SubtitleQueue::PrintQueue(std::ostream& os)
+void SubtitleQueue::PrintQueue(ostream& os) const
 {
 	SubtitleQueueNode* walker = front;
 	while (walker != nullptr)
