@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SECTIONLISTNODE_H
+#define SECTIONLISTNODE_H
 #include "SubtitleListNode.h"
 
 class SectionListNode
@@ -32,3 +33,4 @@ public:
 	inline void setSubListTail(SubtitleListNode* const& newtail) { subListTail = newtail; }
 	void setNext(SectionListNode* next)	 					{ this->next = next; }
 };
+#endif //SECTIONLISTNODE_H

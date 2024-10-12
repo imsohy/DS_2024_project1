@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SUBTITLEBSTNODE_H
+#define SUBTITLEBSTNODE_H
 #include "basicheader.h"
 
 class SubtitleBSTNode
@@ -30,3 +31,4 @@ public:
 	inline void setRight(SubtitleBSTNode* right)	{ this->right = right; }
 
 };
+#endif //SUBTITLEBSTNODE_H

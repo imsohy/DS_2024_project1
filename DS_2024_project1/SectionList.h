@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SECTIONLIST_H
+#define SECTIONLIST_H
 #include "SectionListNode.h"
 
 class SectionList
@@ -22,3 +23,4 @@ public:
 	// Print
 	void PrintSection(ostream& os, SectionListNode* const) const;
 };
+#endif //SECTIONLIST_H

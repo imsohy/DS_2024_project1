@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SUBTITLEQUEUENODE_H
+#define SUBTITLEQUEUENODE_H
 #include "basicheader.h"
 
 class SubtitleQueueNode
@@ -38,3 +39,4 @@ public:
 	//modify next node
 	inline void SetNext(SubtitleQueueNode* const inputLink) { nextNode = inputLink; } //set next node
 };
+#endif //SUBTITLEQUEUENODE_H

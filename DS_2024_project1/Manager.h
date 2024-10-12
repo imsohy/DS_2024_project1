@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MANAGER_H
+#define MANAGER_H
 #include "basicheader.h"		//include several headers in basicheader.h
 #include "SubtitleQueue.h"
 #include "SubtitleBST.h"
@@ -37,3 +38,4 @@ public:
 	void DeleteUnder(const Time& key_time);
 
 };
+#endif //MANAGER_H

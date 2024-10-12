@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SUBTITLEBST_H
+#define SUBTITLEBST_H
 #include "SubtitleBSTNode.h"
 #include "SubtitleQueue.h"										//for SearchRange(). it uses SubtitleQueue as buffer.
 
@@ -96,3 +97,5 @@ public:
 	// called by: Manager::DeleteUnder()
 	void DeleteUnder(const Time& delete_time);
 };
+
+#endif //SUBTITLEBST_H

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SUBTITLEQUEUE_H
+#define SUBTITLEQUEUE_H
 #include "SubtitleQueueNode.h"
 
 //Subtitle Queue, linked list data structure
@@ -30,3 +31,4 @@ public:
 	//for debug
 	inline short GetNodeCnt() { return nodecnt; }	//returns nodecnt;
 };
+#endif //SUBTITLEQUEUE_H

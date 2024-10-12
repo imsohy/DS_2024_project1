@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TIME_H
+#define TIME_H
 #include <sstream>
 #include <string>
 using namespace std;
@@ -31,3 +32,4 @@ public:
     //print Time with "HH:MM:SS" format
     friend ostream& operator<<(ostream& os, const Time& time);
 };
+#endif //TIME_H

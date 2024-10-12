@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SUBTITLELISTNODE_H
+#define SUBTITLELISTNODE_H
 #include "basicheader.h"
 class SubtitleListNode
 {
@@ -18,3 +19,4 @@ public:
 	//set property
 	void setNext(SubtitleListNode* next)	 	{ this->next = next; }
 };
+#endif //SUBTITLELISTNODE_H
