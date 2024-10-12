@@ -11,6 +11,7 @@ public:
 	SectionList();
 	~SectionList();
 
+	//get property
 	SectionListNode* getHead();
 
 	// Insert

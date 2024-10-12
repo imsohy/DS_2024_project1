@@ -1,25 +1,21 @@
 #include "Manager.h"
 
 Manager::Manager()
-{
+{   
     SQptr = nullptr;
     SBSTptr = nullptr;
     SLptr = nullptr;
 }
-Manager::~Manager()
-{
-
-}
-
+Manager::~Manager() {}
 void Manager::Run(const char* command)
 {
     // Open command & log file
-    fcmd.open(command);                                     // file open in read state
-    flog.open("log.txt");                                   // file open in write state. print all log here
-    if (!fcmd)                                              // if faild to open
+    fcmd.open(command);                                   
+    flog.open("log.txt");                                
+    if (!fcmd)                                              // if failed to open
     {
         flog << "Fail to open command file" << endl;
-        exit(-1);
+        exit(-1);                                           //fatal error
     }
 
     // Read and Run command
@@ -31,7 +27,8 @@ void Manager::Run(const char* command)
     Time end_time;                                      // saves the end time of SECTION
     Time delete_time;                                      // saves the key time of DELETE UNDER, DELETE EQUAL
 
-    while (getline(fcmd, line))                              // read line from filestream
+    // read line from filestream
+    while (getline(fcmd, line))                              
     {
         istringstream iss(line);                             // saves line to stringstream.
         string extra;                                        // checks extra arguments left on stringstream. in PRINT, it is converted to section_number
@@ -221,8 +218,7 @@ void Manager::Load(){
         catch (const char* pusherror)             
         {  
             PrintErrorCode(100);
-            flog << pusherror << ", cannot push to subtitle queue.terminate program" << endl;
-            exit(-1);
+            exit(-1);               //fatal error
         }
     }
 }
@@ -230,7 +226,6 @@ void Manager::Load(){
 void Manager::Qpop() {
     //allocate new SubtitleBST if SubtitleBST ptr is null
     if (!SBSTptr) SBSTptr = new SubtitleBST();
-    //if data doesn't exist in SubtitleQueue ptr then PrintErrorCode() and terminate program
     if (!SQptr || SQptr->IsEmpty()) {   //if SubtitleQueue not allocated || if its empty
         PrintErrorCode(200);            
         exit(-1);                       //fatal error

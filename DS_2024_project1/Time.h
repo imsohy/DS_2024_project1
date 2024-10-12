@@ -18,9 +18,6 @@ public:
     short getMinutes() const;
     short getSeconds() const;
 
-    //return false if the string type was invalid
-    bool parseTime(const std::string& timeStr);
-
     //operator overloading
     bool operator<(const Time& other) const;
     bool operator>(const Time& other) const;
@@ -30,7 +27,7 @@ public:
     bool operator<=(const Time& other) const;
 
     //parses string format "HH:MM:SS" to each field. (0 <= HH < 100, 0 <= MM < 60, 0 <= SS <60)
-    friend std::istream& operator>>(std::istream& is, Time& time);
+    friend istream& operator>>(istream& is, Time& time);
     //print Time with "HH:MM:SS" format
-    friend std::ostream& operator<<(std::ostream& os, const Time& time);
+    friend ostream& operator<<(ostream& os, const Time& time);
 };

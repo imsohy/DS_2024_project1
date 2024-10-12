@@ -14,7 +14,7 @@ public:
 	//base constructor
 	SubtitleQueueNode() : nextNode(nullptr) {};
 	//constructor with parameter
-	SubtitleQueueNode(const Time& inputTime, const std::string& inputString) { 
+	SubtitleQueueNode(const Time& inputTime, const string& inputString) { 
 		data = std::make_pair(inputTime, inputString);
 		nextNode = nullptr;
 	}
@@ -32,7 +32,7 @@ public:
 	//getting data
 	inline Datapair GetData() { return data; }		//return data pair
 	inline Time GetSubTime() { return data.first; }		//get subtitle Time of this node
-	inline std::string GetSubString() { return data.second; }	//get subtitle String of this node
+	inline string GetSubString() { return data.second; }	//get subtitle String of this node
 	//getting next node
 	inline SubtitleQueueNode* GetNext() {return nextNode;}			//get nextNode of this node
 	//modify next node

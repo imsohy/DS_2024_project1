@@ -9,11 +9,11 @@
 class Manager
 {
 private:
-	SubtitleQueue* SQptr = nullptr;		//pointer to point SubtitleQueue instance
-	SubtitleBST* SBSTptr = nullptr;		//pointer to point SubtitleBST instance
-	SectionList* SLptr = nullptr;		//pointer to point SectionList instance
-	std::ifstream fcmd;
-	std::ofstream flog;
+	SubtitleQueue* SQptr = nullptr;		//saves SubtitleQueue instance during Run()
+	SubtitleBST* SBSTptr = nullptr;		//saves SubtitleBST instance during Run()
+	SectionList* SLptr = nullptr;		//saves SectionList instance during Run()
+	ifstream fcmd;
+	ofstream flog;
 public:
 	Manager();
 	~Manager();

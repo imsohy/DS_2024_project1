@@ -1,42 +1,5 @@
 #include "Time.h"
 
-bool Time::parseTime(const string& timeStr) {
-    // Check if the length of the string is exactly 8 (XX:XX:XX)
-        if (timeStr.length() != 8) {
-            return false;
-        }
-
-    // Check if ':' are in the correct positions
-    if (timeStr[2] != ':' || timeStr[5] != ':') {
-        return false;
-    }
-
-    // Extract hours, minutes, and seconds parts
-    stringstream ss(timeStr);      //used stringstream to separate strings by ';'
-    string hoursStr, minutesStr, secondsStr;
-
-    getline(ss, hoursStr, ':');   // Get hours
-    getline(ss, minutesStr, ':'); // Get minutes
-    getline(ss, secondsStr);      // Get seconds
-
-    // Check if each part is exactly 2 characters long
-    if (hoursStr.length() != 2 || minutesStr.length() != 2 || secondsStr.length() != 2) {
-        return false;
-    }
-
-    // Convert each part to an integer and check if they are within valid ranges
-    hours = stoi(hoursStr);
-    minutes = stoi(minutesStr);
-    seconds = stoi(secondsStr);
-
-    // Check hours >= 0, minutes and seconds should be between 0 and 59
-    if (hours < 0 || minutes < 0 || minutes >= 60 || seconds < 0 || seconds >= 60) {
-        return false;
-    }
-
-    return true;
-}
-
 bool Time::operator<(const Time& other) const {
     if (hours < other.hours) return true;   //compare hour
     if (hours == other.hours && minutes < other.minutes) return true; //compare min 
@@ -62,7 +25,7 @@ bool Time::operator>=(const Time& other) const {
 bool Time::operator<=(const Time& other) const {
     return (*this < other) || (*this == other);
 }
-std::istream& operator>>(std::istream& is, Time& time)
+istream& operator>>(istream& is, Time& time)
 {
     string timeStr; //saves the string 
     is >> timeStr;  //get string until the first whitespace
@@ -82,7 +45,7 @@ std::istream& operator>>(std::istream& is, Time& time)
     }
 
     // Extract hours, minutes, and seconds parts
-    stringstream ss(timeStr);      //used stringstream to separate strings by ';'
+    stringstream ss(timeStr);      //used stringstream to separate strings by ':'
     string hoursStr, minutesStr, secondsStr;
 
     getline(ss, hoursStr, ':');   // Get hours
@@ -118,7 +81,7 @@ std::istream& operator>>(std::istream& is, Time& time)
         return is;
     }
 }
-std::ostream& operator<<(std::ostream& os, const Time& time)
+ostream& operator<<(ostream& os, const Time& time)
 {
     //if the time had error
     if (time.hours < 0)

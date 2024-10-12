@@ -19,7 +19,7 @@ public:
 	void Push(const Datapair& inputPair);
 	Datapair Pop();					//if the queue is not empty, return the front data as pair, pop.
 	Datapair Front() const;			//if the queue is not empty, return the front data as pair.
-	void PrintQueue(std::ostream& os);			//print data from the front to the rear
+	void PrintQueue(ostream& os);			//print data from the front to the rear
 
 	//for debug
 	inline short GetNodeCnt() { return nodecnt; }	//returns nodecnt;
