@@ -9,12 +9,12 @@ SubtitleQueue::SubtitleQueue(int queueCapacity)
 SubtitleQueue::~SubtitleQueue()
 {
 	SubtitleQueueNode* deleteNode = nullptr;
-	while (front != nullptr)
+	while (front != nullptr)			//delete every subtitle queue node
 	{
-		deleteNode = front;
-		front = front->GetNext();
-		delete deleteNode;
-		nodecnt--;
+		deleteNode = front;				//save front node
+		front = front->GetNext();		//move front to nextnode
+		delete deleteNode;				//delete before frontnode
+		nodecnt--;						//manage nodecnt change
 	}
 }
 bool SubtitleQueue::IsEmpty () const
@@ -30,23 +30,23 @@ void SubtitleQueue::Push(const Time& inputTime, const std::string& inputSub)
 	if (!IsFull())
 	{
 		SubtitleQueueNode* newnode = new SubtitleQueueNode(inputTime, inputSub);
-		if (IsEmpty())
-			front = rear = newnode;
+		if (IsEmpty()) 
+			front = rear = newnode;			//push on empty queue
 		else
-		{
-			rear->SetNext(newnode);
-			rear = rear->GetNext();
+		{				
+			rear->SetNext(newnode);			//set newnode to rear's next
+			rear = rear->GetNext();			//move rear to it
 		}
-		nodecnt++;
+		nodecnt++;							//manage nodecnt change
 	}
-	else throw "fatal error: full queue push()";		//full queue push() fatal error; 
+	else throw "fatal error: full queue push()";		//full queue push() fatal error; expected error
 }
 void SubtitleQueue::Push(const Datapair& inputPair)
 {
 	if (!IsFull())
 	{
 		SubtitleQueueNode* newnode = new SubtitleQueueNode(inputPair);
-		if (IsEmpty())
+		if (IsEmpty())	
 			front = rear = newnode;
 		else {
 			rear->SetNext(newnode);
@@ -58,14 +58,14 @@ void SubtitleQueue::Push(const Datapair& inputPair)
 }
 Datapair SubtitleQueue::Pop()
 {
-	if (!IsEmpty())
+	if (!IsEmpty())		//only work if queue is empty
 	{
-		SubtitleQueueNode* deleteNode = front;
-		front = front->GetNext();
-		Datapair deleteNodeData = deleteNode->GetData();
-		delete deleteNode;
-		nodecnt--;
-		return deleteNodeData;
+		SubtitleQueueNode* deleteNode = front;			//save current front node 
+		front = front->GetNext();						//move front to nextnode
+		Datapair deleteNodeData = deleteNode->GetData(); //save current front node data
+		delete deleteNode;								//delete before front node
+		nodecnt--;										//manage nodecnt change
+		return deleteNodeData;							//return popped data
 	}
 	else throw "fatal error: empty queue pop()";		//empty queue pop() fatal error (do not happen)
 }
@@ -77,7 +77,7 @@ Datapair SubtitleQueue::Front() const
 }
 void SubtitleQueue::PrintQueue(ostream& os) const
 {
-	SubtitleQueueNode* walker = front;
+	SubtitleQueueNode* walker = front;			//start from front, walks
 	while (walker != nullptr)
 	{
 		os << walker->GetSubTime() << " - " << walker->GetSubString() << std::endl;

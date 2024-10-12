@@ -17,8 +17,8 @@ public:
 	bool IsFull() const;					//returns true if nodecnt == capacity
 
 	//push
-	void Push(const Time& inputTime, const std::string& inputSub);	
-	void Push(const Datapair& inputPair); 
+	void Push(const Time& inputTime, const string& inputSub);	
+	void Push(const Datapair& inputPair);	//***overloaded Push() to use it as a buffer queue in SECTION (...) operation
 	//pop
 	Datapair Pop();					//if the queue is not empty, return the front data as pair, pop.
 	//front

@@ -15,8 +15,8 @@ public:
 	SectionListNode* getHead();
 
 	// Insert
-	void GenerateNewSection(const int& section_num);			//insert new SectionListNode at the SectionList tail.
-	void InsertSubtitle(Datapair inputData);				//insert new SubtitleListNode, at the subListTail of seciton_header. 
+	void GenerateNewSection(const int& section_num);			//insert new SectionListNode at the tail (= section header)
+	void InsertSubtitle(Datapair inputData);				//insert new SubtitleListNode, at the subListTail of tail.
 	// Search
 	SectionListNode * Search(ostream& os, const int& key_section_num);							//search the matching section number
 	// Print

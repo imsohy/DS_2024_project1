@@ -32,7 +32,7 @@ void SectionList::GenerateNewSection(const int& section_num)
 		tail= tail->getNext();						//set tail to it.
 	}
 }
-// Insert - insert new SubtitleListNode to the SectionList Tail section. (tail = section header)
+// Insert - insert new SubtitleListNode, to the sublistTail of tail. (tail = section header)
 void SectionList::InsertSubtitle(Datapair inputData)
 {
 	//generate new subtitle list node

@@ -278,11 +278,11 @@ void Manager::Section(const int& section_num, const Time& start_time, const Time
     //create new SectionListNode to tail (even though SubtitleQueue doesn't exist or no node will be found in SearchRange())
     SLptr->GenerateNewSection(section_num);
     //PrintErrorCode() if SubtitleBST pointer is null
-    if (!SQptr) { PrintErrorCode(400); return; }
+    if (!SBSTptr) { PrintErrorCode(400); return; }
     //allocate buffer SubtitleQueue. this saves SearchRange() result from SubtitleBST.
     SubtitleQueue* bufferSQ = new SubtitleQueue(CAP);
-    //Search every SubtiteBSTNode in the range of start_time ~ end_time, get result.
-    SBSTptr->SearchRange(start_time, end_time, bufferSQ);
+    //Search every SubtiteBSTNode in the range of start_time ~ end_time. save it to bufferSQ.
+    SBSTptr->SearchRange(start_time, end_time, bufferSQ);  
     //print error message if no node found in SearchRange()
     if (bufferSQ->IsEmpty()) { 
         PrintErrorCode(400); 
