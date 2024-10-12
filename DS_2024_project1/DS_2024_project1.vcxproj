@@ -136,10 +136,6 @@
     <ClInclude Include="Time.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="command.txt" />
-    <Text Include="subtitle.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="basicheader.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="SectionList.h" />

@@ -38,14 +38,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="command.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-    <Text Include="subtitle.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Manager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
