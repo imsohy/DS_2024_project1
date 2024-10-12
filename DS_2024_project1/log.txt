@@ -102,7 +102,6 @@ Subtitle_BST
 00:52:20 - Right now!
 00:52:21 - Bed? Before dinner?
 00:52:23 - I'm really, really tired. Yeah.
-00:52:36 - You're welcome.
 00:53:50 - Mom! Dad! 
 00:53:56 - Oh, God. I'm still here?
 00:54:16 - Hey, you! Where's the other mother?
@@ -127,8 +126,8 @@ Subtitle_BST
 01:11:59 - And I'll let you sew buttons into my eyes.
 ===============
 
-===== DELETE =====
-Success
+===== ERROR =====
+1000000
 ===============
 
 ===== PRINT =====
@@ -138,7 +137,6 @@ Subtitle_BST
 00:52:20 - Right now!
 00:52:21 - Bed? Before dinner?
 00:52:23 - I'm really, really tired. Yeah.
-00:52:36 - You're welcome.
 00:53:50 - Mom! Dad! 
 00:53:56 - Oh, God. I'm still here?
 00:54:16 - Hey, you! Where's the other mother?

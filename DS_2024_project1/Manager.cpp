@@ -6,12 +6,9 @@ Manager::Manager()
     SBSTptr = nullptr;
     SLptr = nullptr;
 }
-Manager::~Manager()     //EXIT
+Manager::~Manager()
 {
-    delete SQptr;
-    delete SBSTptr;
-    delete SLptr;
-    PrintSuccess("EXIT");
+
 }
 
 void Manager::Run(const char* command)
@@ -32,7 +29,7 @@ void Manager::Run(const char* command)
     int section_num = -1;                                    // saves the section number of PRINT, SECTION
     Time start_time;                                    // saves the start time of SECTION
     Time end_time;                                      // saves the end time of SECTION
-    Time key_time;                                      // saves the key time of DELETE UNDER, DELETE EQUAL
+    Time delete_time;                                      // saves the key time of DELETE UNDER, DELETE EQUAL
 
     while (getline(fcmd, line))                              // read line from filestream
     {
@@ -73,22 +70,22 @@ void Manager::Run(const char* command)
                 else
                 {
                     try {
-                        section_num = -1;
-                        section_num = stoi(extra);           //exception std::invalid_argument, std::out of range
+                        section_num = stoi(extra);          //stoi can make exception std::invalid_argument, std::out of range
                         //check if section number is invalid
-                        if (section_num < 0)
-                            PrintErrorCode(300);            //Error 300; invalid section number
+                        if (section_num < 0)                
+                            PrintErrorCode(300);            //section number under zero
                         //check if there's no extra arguments
-                        else if (!(iss >> extra))
-                            Print(section_num);            //run PRINT section_num
-                        else
-                            PrintErrorCode(300);           //Error 300; extra arguments left in line
+                        else if (!(iss >> extra))      
+                            //execute PRINT section_num
+                            Print(section_num);            
+                        else                               
+                            PrintErrorCode(300);           //extra arguments left in line
+                    } 
+                    catch (const invalid_argument& e) { 
+                        PrintErrorCode(300);               //not an int
                     }
-                    catch (const invalid_argument& e) {
-                        PrintErrorCode(300);               //Error 300; argument not a number
-                    }
-                    catch (const out_of_range& e) {
-                        PrintErrorCode(300);               //Error 300; argument out of range of int
+                    catch (const out_of_range& e) { 
+                        PrintErrorCode(300);               //out of range of int
                     }
                 }
             }
@@ -96,39 +93,47 @@ void Manager::Run(const char* command)
             else if (command_name == "SECTION")
             {
                 //get the arguments / check if its valid
-                if (!(iss >> section_num >> start_time >> end_time)) {
-                    PrintErrorCode(400);                   //Error 400; invalid or insufficient argument
-                    iss.clear();                            //clear stream failbit
+                if (!(iss >> section_num >> start_time >> end_time)) 
+                {
+                    PrintErrorCode(400);                    //invalid or insufficient argument
+                    //clear stream failbit
+                    iss.clear();                            
                 }
                 //check if there's no extra arguments
                 else if (!(iss>>extra))
+                    //execute SECTION (...)
                     Section(section_num, start_time, end_time);
                 else
-                    PrintErrorCode(400);                   //Error 400; extra arguments left in line
+                    PrintErrorCode(400);                   //extra arguments left
             }
             //DELETE
             else if (command_name == "DELETE")
             {
                 //get the argumets / check if its valid
-                if (!(iss >> delete_mode >> key_time)) {
-                    PrintErrorCode(500);                   //Error 500; invalid or insufficient argument
+                if (!(iss >> delete_mode >> delete_time)) 
+                {
+                    PrintErrorCode(500);                   //invalid or insufficient argument
+                    //clear stream failbit
                     iss.clear();
                 }
                 //check if there's no extra arguments
                 else if (!(iss>>extra)) {
+                    //check delete mode
                     if (delete_mode == "EQUAL")
                     {
-                        DeleteEqual(key_time);
+                        //execute DELETE EQUAL delete_time
+                        DeleteEqual(delete_time);
                     }
                     else if (delete_mode == "UNDER")
                     {
-                        DeleteUnder(key_time);
+                        //execute DELETE UNDER delete_time
+                        DeleteUnder(delete_time);
                     }
                     else
-                        PrintErrorCode(500); //Error 500; extra arguments left in line
+                        PrintErrorCode(500); //invalid deletemode
                 }
                 else
-                    PrintErrorCode(500); //Error 500; extra arguments left in line
+                    PrintErrorCode(500); //extra argument 
             }
             //EXIT
             else if (command_name == "EXIT")
@@ -136,7 +141,15 @@ void Manager::Run(const char* command)
                 //check if there's no extra arguments
                 if (!(iss>>extra))
                 {
-                    break;
+                    //deallocate memory
+                    delete SQptr;
+                    delete SBSTptr;
+                    delete SLptr;
+                    fcmd.close();
+                    flog.close();
+                    PrintSuccess("EXIT");
+                    //return to main()
+                    return;
                 }
                 else
                     PrintErrorCode(1000);           //Error 1000; extra arguments left in line
@@ -146,10 +159,6 @@ void Manager::Run(const char* command)
                 PrintErrorCode(1000);               //Error 1000; invalid command name;
         }
     } // end while
-    
-    fcmd.close();
-    flog.close();
-    return;
 }
 
 //print cmd name if successed
@@ -190,17 +199,17 @@ void Manager::Load(){
     }
     else
     {
-        Time inputTime;
-        string inputString;
+        //get data from subtitle.txt
+        Time subtitleTime;
+        string subtitleString;
         try 
         {
-            //get data from subtitle.txt
-            while (fsub >> inputTime)                              //get input subtitle time
+            while (fsub >> subtitleTime)                              // read time  
             {
-                fsub.ignore(1);                                     //ignore whitespace between time and string
-                getline(fsub, inputString);                        //get input subtitle data
+                fsub.ignore(1);                                       //ignore " "
+                getline(fsub, subtitleString);                        //read string
                 //try push to SubtitleQueue
-                SQptr->Push(inputTime, inputString);
+                SQptr->Push(subtitleTime, subtitleString);            // this can have valid error
             }
             //successfully Loadd, print result
             flog << "===== LOAD =====" << endl;
@@ -217,25 +226,27 @@ void Manager::Load(){
         }
     }
 }
-
 // QPOP
 void Manager::Qpop() {
     //allocate new SubtitleBST if SubtitleBST ptr is null
     if (!SBSTptr) SBSTptr = new SubtitleBST();
     //if data doesn't exist in SubtitleQueue ptr then PrintErrorCode() and terminate program
-    if (!SQptr || SQptr->IsEmpty()) {   //if SubtitleQueue not allocated or if its empty
-        PrintErrorCode(200);            //print error log
-        exit(-1);                       //terminate program
+    if (!SQptr || SQptr->IsEmpty()) {   //if SubtitleQueue not allocated || if its empty
+        PrintErrorCode(200);            
+        exit(-1);                       //fatal error
     }
-    //get SubtitleQueueNode count, only work if Subtitle queue is not empty (nodecnt > 0)
-    while (!(SQptr->IsEmpty()))
-    {
-        //Pop() the Subtitle Queue,insert to subtitle BST
+    //build BST with Popped data in Subtitle Queue
+    while (!(SQptr->IsEmpty()))         //only work if Subtitle queue is not empty(nodecnt > 0)
+    {        
 // for debug (prints Datapair to be inserted)
-//                flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;    
-//                std::pair<Time, std::string> thePair = SQptr->Front();            
-//                flog << thePair.first << " - " << thePair.second << endl;         
+//      flog << "pop " << SQptr->GetNodeCnt() << "th element."<<endl;    
+//      std::pair<Time, std::string> thePair = SQptr->Front();            
+//      flog << thePair.first << " - " << thePair.second << endl;   
+        
+        //Pop() the Subtitle Queue,insert to subtitle BST
         SBSTptr->Insert(SQptr->Pop());
+        //***Pop() actually never be executed in empty SubtitleQueue, so exit() doesn't happen that case
+        //however, we can think QPOP in empty SubtitleQueue as same case
     }
     PrintSuccess("QPOP");
 }
@@ -292,10 +303,21 @@ void Manager::Section(const int& section_num, const Time& start_time, const Time
     return;
 }
 // DELETE EQUAL (...)
-void Manager::DeleteEqual(const Time& key_time) {
-    PrintSuccess("DELETE");
+void Manager::DeleteEqual(const Time& delete_time) {
+    if (!SBSTptr) { PrintErrorCode(500); return; }      //if SubtitleBST pointer is not allocated, return
+    try 
+    {
+        SBSTptr->DeleteEveryEqual(delete_time);
+        PrintSuccess("DELETE");
+    }
+    //catch error if SubtitleBST doesn't have any nodes that,
+    //subtitle Time equals to delete_time (or, empty)
+    catch (const char* notfound)
+    {
+        PrintErrorCode(500);
+    }
 }
 // DETETE UNDER (...)
-void Manager::DeleteUnder(const Time& key_time) {
-    PrintSuccess("DELETE");
+void Manager::DeleteUnder(const Time& delete_time) {
+    
 }

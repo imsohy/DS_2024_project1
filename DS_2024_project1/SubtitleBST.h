@@ -8,20 +8,68 @@ private:
 	SubtitleBSTNode* root;
 	
 	// Search (private)
-	void SearchRange(SubtitleBSTNode* const& node, const Time& start_time, const Time& end_time, SubtitleQueue* const& bufferSQ) const; //Workhorse
+
+	// SearchRange() Workhorse.
+	// inorder Search BST node in the range of start_time ~ end_time, save data at buffer SubtitleQueue.
+	// used in SECTION (...)
+	void SearchRange(SubtitleBSTNode* const& pCur, const Time& start_time, const Time& end_time, SubtitleQueue* const& bufferSQ) const; //Workhorse
+
+	// Delete (private)
+	
+	// return one node with the matching delete_time, saves its parent pointer.
+	// used in DELETE EQUAL delete_time
+	SubtitleBSTNode* SearchEqual(const Time& delete_time, SubtitleBSTNode* parent) const;
+
+	//delete the node given. must need its parent info.
+	// used in DELETE EQUAL delete_time and DELETE UNDER delete_time.
+	void DeleteNode(SubtitleBSTNode*  nodeToDelete, SubtitleBSTNode* parent);
+	
+	//find the successor (minimum node in the subtree) with the root is given node value.
+	// return the successor ptr, save successor at given reference.
+	// used in DELETE EQUAL delete_time and DELETE UNDER delete_time
+	SubtitleBSTNode* FindMin(SubtitleBSTNode* node, SubtitleBSTNode*& parent) const;
 public:
 	SubtitleBST();
 	~SubtitleBST();
 
-	SubtitleBSTNode* getRoot();
+	SubtitleBSTNode* getRoot();		//return root
 
-	// Insert
+	//Insert
+
+	// make new node with given Datapair to data, insert in the right position.
+	// used in QPOP
 	void Insert(const Datapair& thePair);
+
 	// Print
+
+	// PrintBST() Driver.
+	// Print whole BST.
+	// used in PRINT
 	void PrintBST(ostream& os) const;
+
+	// PrintBST() Workhorse.
+	// Print whole BST inorder.
+	// used in PRINT
 	void PrintBST(ostream& os, SubtitleBSTNode* const& node) const;
+
 	// Search
+
+	// SearchRange() Driver.
+	// Search BST node in the range of start_time ~ end_time, save data at buffer SubtitleQueue.
+	// bufferSQ saves section Datapairs.
+	// used in SECTION (...)
 	void SearchRange(const Time& start_time, const Time& end_time, SubtitleQueue* const& bufferSQ) const; //Driver
+	
 	// Delete
 
+	// Post-Order delete whole BST.
+	// used in EXIT
+	void DeleteBST(SubtitleBSTNode* const& node);
+
+	// find and delete EVERY node that subtitle Time equals to key_time
+	// used in DELETE EQUAL delete_time
+	void DeleteEveryEqual(const Time& delete_time);
+
+
+	void DeleteUnder(SubtitleBSTNode* node);
 };

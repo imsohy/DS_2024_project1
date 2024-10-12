@@ -17,13 +17,14 @@ public:
 	SubtitleBSTNode(Datapair inputPair) : left(nullptr), right(nullptr), data(inputPair) {}
 	~SubtitleBSTNode() {}
 
-	Time getSubTime() { return data.first; }
-	std::string getSubString() { return data.second; }
-	Datapair getData() { return data; }
-	SubtitleBSTNode*	getLeft()				{ return left; }
-	SubtitleBSTNode*	getRight()				{ return right; }
+	inline Time getSubTime() { return data.first; }
+	inline string getSubString() { return data.second; }
+	inline Datapair getData() { return data; }
+	inline void setData(const Datapair& inputPair) { data = inputPair; }
+	inline SubtitleBSTNode*	getLeft()				{ return left; }
+	inline SubtitleBSTNode*	getRight()				{ return right; }
 
-	void setLeft(SubtitleBSTNode* left)		{ this->left = left; }
-	void setRight(SubtitleBSTNode* right)	{ this->right = right; }
+	inline void setLeft(SubtitleBSTNode* left)		{ this->left = left; }
+	inline void setRight(SubtitleBSTNode* right)	{ this->right = right; }
 
 };
