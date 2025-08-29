@@ -78,25 +78,15 @@ DS_2024_project1/
 
 ## 빌드 및 실행 방법 (Linux)
 
-Visual Studio 프로젝트가 함께 제공되지만, Linux 환경에서는 `g++` 또는 Makefile을 이용해 쉽게 빌드할 수 있다. 아래는 예시 명령어이다.
-
 ```bash
-# 프로젝트 폴더로 이동
+# 프로젝트 루트 디렉토리로 이동
 cd DS_2024_project1
 
-# Makefile을 이용한 빌드 (실행 파일 이름은 run)
+# 컴파일 (실행파일: run)
 make
 
-# 또는 직접 컴파일 (필요한 소스 파일을 모두 나열)
-g++ -std=c++11 -o subtitle_manager \
-    main.cpp Manager.cpp SubtitleQueue.cpp SubtitleBST.cpp SectionList.cpp Time.cpp \
-    -I .
-
-# 명령어 파일을 인자로 전달하여 실행
-./subtitle_manager command.txt
-
-# 실행 결과는 log.txt 파일에서 확인할 수 있다
-cat log.txt
+# command.txt를 인자로 하여 실행
+./run command.txt
 ```
 
 ---
