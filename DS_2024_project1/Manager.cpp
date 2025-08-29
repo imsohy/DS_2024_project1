@@ -98,9 +98,17 @@ void Manager::Run(const char* command)
                 }
                 //check if there's no extra arguments
                 else if (!(iss>>extra))
-                    //execute SECTION (...)
+		{
+		    if(section_num < 0)
+		    {
+			PrintErrorCode(400);	//invalid section number
+			return;
+		    }
+		    else
+			//execute SECTION (...)
                     Section(section_num, start_time, end_time);
-                else
+		}
+		else
                     PrintErrorCode(400);                   //extra arguments left
             }
             //DELETE
@@ -143,8 +151,8 @@ void Manager::Run(const char* command)
                     delete SBSTptr;
                     delete SLptr;
                     fcmd.close();
-                    flog.close();
                     PrintSuccess("EXIT");
+		    flog.close();
                     //return to main()
                     return;
                 }
@@ -247,7 +255,7 @@ void Manager::Qpop() {
 }
 // PRINT 
 void Manager::Print() {
-    if (!SBSTptr) { PrintErrorCode(300); return; }
+    if (!SBSTptr || SBSTptr->getRoot() == nullptr) { PrintErrorCode(300); return; }
     flog << "===== PRINT =====" << endl;
     flog << "Subtitle_BST" << endl;
     SBSTptr->PrintBST(flog);

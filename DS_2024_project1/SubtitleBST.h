@@ -1,8 +1,11 @@
 #ifndef SUBTITLEBST_H
 #define SUBTITLEBST_H
 #include "SubtitleBSTNode.h"
-#include "SubtitleQueue.h"										//for SearchRange(). it uses SubtitleQueue as buffer.
+#include "SubtitleQueue.h" //for SearchRange(). it uses SubtitleQueue as buffer.
 
+// /**/: the smallest operation this method do.
+// used in: the biggest operation this method do.
+// called by: function that calles this method.
 class SubtitleBST
 {
 private:
